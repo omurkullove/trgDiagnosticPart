@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setGetFileUrl } from "../../Slices/TrgSlice";
 
+import star1 from "./Assets/star1.svg";
+import star2 from "./Assets/star2.svg";
+
 const TagFile = () => {
   const [img, setImg] = useState("");
   const [imgUrl, setImgUrl] = useState();
@@ -40,6 +43,7 @@ const TagFile = () => {
   return (
     <div className={style.modal_parent}>
       <div className={style.modal_container}>
+        <img src={star1} className={style.star1} />
         <div className={style.modal_header}>
           <img src={Krestik} />
         </div>
@@ -113,6 +117,7 @@ const TagFile = () => {
             добавить расчёт
           </button>
         </div>
+        <img src={star2} className={style.star2} />
       </div>
     </div>
   );

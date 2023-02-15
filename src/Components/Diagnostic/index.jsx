@@ -15,8 +15,14 @@ import PointslOffSVG from "./Assets/Targetoff.svg";
 import PointsOnSVG from "./Assets/Targeton.svg";
 import LinesOffSVG from "./Assets/Filter_bigoff.svg";
 import LinesOnSVG from "./Assets/Filter_bigon.svg";
-import { Fade, Menu, MenuItem, Typography } from "@mui/material";
+import { Fade, Menu } from "@mui/material";
 import Slider from "@mui/material/Slider";
+import star1 from "../TagFile/Assets/star1.svg";
+import star2 from "../TagFile/Assets/star2.svg";
+
+import loadingSVG from "./Assets/loading.svg";
+import DoneSVG from "./Assets/Done.svg";
+import deleteSVG from "./Assets/delete.svg";
 
 const Diagnostic = () => {
   const fileUrl = useSelector(state => state.trg.fileUrl);
@@ -39,9 +45,8 @@ const Diagnostic = () => {
     const cs = getComputedStyle(canvas);
     const widthC = parseInt(cs.getPropertyValue("width"), 10);
     const heightC = parseInt(cs.getPropertyValue("height"), 10);
-    var rect = canvas.parentNode.getBoundingClientRect();
-    canvas.width = 720;
-    canvas.height = 720;
+    canvas.width = widthC;
+    canvas.height = heightC;
     contextRef.current.clearRect(0, 0, canvas.width, canvas.height);
 
     dots.forEach((dot, index) => {
@@ -63,12 +68,17 @@ const Diagnostic = () => {
   }, [dots, isDotsVisible, isLinesVisible]);
 
   function handleAddDot(event) {
-    const canvas = canvasRef.current;
-    setDotsId(prev => prev + 1);
-    const rect = canvas.parentNode.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    setDots(prev => [...dots, { x, y, dotsId }]);
+    if (dots.length < 40) {
+      const canvas = canvasRef.current;
+      setDotsId(prev => prev + 1);
+      const rect = canvas.parentNode.getBoundingClientRect();
+
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      setDots(prev => [...dots, { x, y, dotsId }]);
+    } else {
+      return;
+    }
   }
   function handleToggleDotsVisibility() {
     setIsDotsVisible(false);
@@ -83,6 +93,40 @@ const Diagnostic = () => {
   function handleToggleLinesVisibilityTrue() {
     setIsLinesVisible(true);
   }
+  function removeDot(index) {
+    if (dots.length > 0) {
+      setDots(prev => (prev = dots.slice(0, dots.length - 1)));
+    }
+  }
+
+  //DOTS INFO
+
+  const DOTS_INFO = [
+    {
+      name: "S - Точка в середине турецкого седла. Геометрический центр гипофиза.",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+    {
+      name: "Se - Средняя точка на середине входа в турецкое седло",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+    {
+      name: "N – передне верхний край носолобного шва",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+    {
+      name: "Point1",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+    {
+      name: "Point1",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+    {
+      name: "Point1",
+      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+    },
+  ];
 
   //Dashboard
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -249,11 +293,7 @@ const Diagnostic = () => {
               </div>
             </div>
             <div className={style.img}>
-              <canvas
-                ref={canvasRef}
-                onMouseDown={handleAddDot}
-                style={{ border: "5px solid black" }}
-              />
+              <canvas ref={canvasRef} onMouseDown={handleAddDot} />
               <img
                 src={
                   fileUrl
@@ -269,7 +309,32 @@ const Diagnostic = () => {
               />
             </div>
           </div>
-          <div className={style.block_2}>2</div>
+          <div className={style.block_2}>
+            <img className={style.star1} src={star1} />
+            <img className={style.star2} src={star2} />
+            {DOTS_INFO.map((item, index) => (
+              <div className={style.block}>
+                <div className={style.dots_container}>
+                  <p>{item.name}</p>
+                  <div>
+                    {index === dots.length - 1 && (
+                      <img src={deleteSVG} onClick={() => removeDot(index)} />
+                    )}
+                    {index > dots.length - 1 ? (
+                      <img src={loadingSVG} />
+                    ) : (
+                      <img src={DoneSVG} />
+                    )}
+                  </div>
+                </div>
+                <div className={style.hint}>
+                  {index === dots.length && (
+                    <img src={item.img} onClick={() => removeDot(index)} />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
       <footer className={style.footer}>it is a footer</footer>
