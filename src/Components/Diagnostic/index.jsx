@@ -37,6 +37,11 @@ const Diagnostic = () => {
   const [isDotsVisible, setIsDotsVisible] = useState(true);
   const [isLinesVisible, setIsLinesVisible] = useState(true);
 
+  const [index, setIndex] = useState(0);
+  const [index2, setIndex2] = useState(0);
+
+  const [dotsMM, setDotsMM] = useState([]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -68,14 +73,17 @@ const Diagnostic = () => {
   }, [dots, isDotsVisible, isLinesVisible]);
 
   function handleAddDot(event) {
-    if (dots.length < 40) {
+    if (dots.length < DOTS_INFO.flat().length) {
       const canvas = canvasRef.current;
-      setDotsId(prev => prev + 1);
+      setDotsId(prev => prev + 2);
       const rect = canvas.parentNode.getBoundingClientRect();
 
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       setDots(prev => [...dots, { x, y, dotsId }]);
+      setIndex(index + 1);
+      setIndex2(index2 + 1);
+      transformArray(dots);
     } else {
       return;
     }
@@ -102,31 +110,49 @@ const Diagnostic = () => {
   //DOTS INFO
 
   const DOTS_INFO = [
-    {
-      name: "S - Точка в середине турецкого седла. Геометрический центр гипофиза.",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
-    {
-      name: "Se - Средняя точка на середине входа в турецкое седло",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
-    {
-      name: "N – передне верхний край носолобного шва",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
-    {
-      name: "Point1",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
-    {
-      name: "Point1",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
-    {
-      name: "Point1",
-      img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
-    },
+    [
+      {
+        name: "A",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+      {
+        name: "B",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+    ],
+    [
+      {
+        name: "C",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+      {
+        name: "D",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+    ],
+    [
+      {
+        name: "E",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+      {
+        name: "F",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+    ],
+    [
+      {
+        name: "G",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+      {
+        name: "H",
+        img: "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1",
+      },
+    ],
   ];
+
+  const [isButton, setIsButton] = useState(false);
 
   //Dashboard
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -136,6 +162,44 @@ const Diagnostic = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  function transformArray(dots) {
+    const transformedArray = DOTS_INFO.map(innerArr => {
+      const nameValues = innerArr.reduce((acc, obj, index) => {
+        const [key, value] = Object.entries(obj)[0];
+        acc[`name${index + 1}`] = value;
+        return acc;
+      }, {});
+      return { "a-b": `${nameValues.name1}-${nameValues.name2}` };
+    });
+    const res = returnObjectsEverySecond(transformedArray, dots);
+    const data = [];
+    for (let i = 0; i < res.length; i++) {
+      data.push(res[i]);
+    }
+    if (data.length === DOTS_INFO.length) {
+      setDotsMM(prev => (prev = data));
+      setIsButton(true);
+    }
+  }
+
+  function returnObjectsEverySecond(arr1, arr2) {
+    let i = 0;
+    let j = 0;
+    const outputArray = [];
+    while (i < arr1.length && j < arr2.length) {
+      if (j % 2 === 0) {
+        outputArray.push(arr1[i]);
+        i++;
+      }
+      j++;
+    }
+    return outputArray;
+  }
+
+  const handleFakeSubmit = () => {
+    console.log("submitted!");
+    console.log(dotsMM);
   };
 
   //Image filter
@@ -313,7 +377,7 @@ const Diagnostic = () => {
             <img className={style.star1} src={star1} />
             <img className={style.star2} src={star2} />
             {DOTS_INFO.map((item, index) => (
-              <div className={style.block}>
+              <div className={style.block} key={index}>
                 <div className={style.dots_container}>
                   <p>{item.name}</p>
                   <div>
@@ -335,6 +399,18 @@ const Diagnostic = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div className={style.button_div}>
+          <button
+            onClick={() => handleFakeSubmit()}
+            disabled={isButton ? false : true}
+            style={
+              isButton
+                ? { border: "5px solid green" }
+                : { border: "5px solid red" }
+            }>
+            GET
+          </button>
         </div>
       </main>
       <footer className={style.footer}>it is a footer</footer>
