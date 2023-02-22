@@ -1,0 +1,9 @@
+@import "./adaptive.module.scss";
+
+.container {
+  max-width: 1380px;
+  margin: auto;
+  @include tablet {
+    max-width: 90%;
+  }
+}
