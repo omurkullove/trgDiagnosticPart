@@ -228,13 +228,18 @@ const Diagnostic = () => {
   //Логика просчета дистанции
   const [distances, setDistances] = useState([]);
 
+  //Разница между нашими мм и теми что на картинке
+  const [difference, setDifference] = useState(0);
+
   //чем то эта фунция сортирует  координаты для фунции distance
   function calculateDistances() {
     const newDistances = [];
     for (let i = 0; i < dots.length - 1; i += 2) {
-      const dist = distance(dots[i].x, dots[i].y, dots[i + 1].x, dots[i + 1].y);
+      const dist = (distance(dots[i].x, dots[i].y, dots[i + 1].x, dots[i + 1].y));
+      //происводится подсчет dist учитывая разницу между растоянием
+      let distWithDifference = dist + (dist * Math.abs(difference) / 100) * (difference > 0 ? 1 : -1);
       // В дист храниться обькт уже с рассчитаной дистнацикей  {key:"distance"},теперь остается все запушить
-      newDistances.push({ [`key`]: dist });
+      newDistances.push({ [`key`]: distWithDifference });
     }
     //Меняем стейт
     setDistances(newDistances);
@@ -253,6 +258,17 @@ const Diagnostic = () => {
       calculateDistances();
     }
   }, [dots]);
+
+  useEffect(() => {
+    // тут проводится проверка на то есть ли обьекты в массиве дистанций
+    if (distances.some(dis => typeof dis === 'object' && dis !== null)){
+      //берется первый обьект, он должен быть первыми точками которые служал для определение нашим мм и тех что на картинки
+      //значени 30 это значение которое должен выбрать пользователь на линейке для праильного понимая системой картинки
+      const newDifference = ((30 - distances[0].key) / distances[0].key * 100)
+      //все преобразовал в проценты, это проценты разницы между картинкой и нашими мм для корректного отображения на всех разрешениях экрана
+      setDifference(newDifference)
+    }
+  }, [distances])
 
   /*  
   Теперь у нас есть два массива dotsMM и distances
@@ -283,6 +299,7 @@ const Diagnostic = () => {
     if (dotsMM.length && dots.length > 0) {
       setDots([]);
       setDotsMM([]);
+      setDifference(0)
     }
   };
 
