@@ -30,7 +30,8 @@ import {
   calculateAngleBetweenThreePoints,
   calculateAngleToTheIntersection,
   calculateDistanceBetweenLineAndDot,
-  calculateDistances, calculatePerpendicular,
+  calculateDistances,
+  calculatePerpendicular,
 } from "./calculateFunctions/calculateFunctions";
 
 const Diagnostic = () => {
@@ -51,7 +52,27 @@ const Diagnostic = () => {
   const [dotsMM, setDotsMM] = useState([]);
 
   const dispatch = useDispatch();
-  const [drawLineMode, setDrawLineMode] = useState(false);
+
+  const [currentDocumentWidth, setCurrentDocumentWidth] = useState(
+    document.documentElement.clientWidth || document.body.clientWidth
+  );
+
+  const [currentDotDiameter, setCurrentDotDiameter] = useState(4);
+
+  useEffect(() => {
+    setCurrentDocumentWidth(
+      document.documentElement.clientWidth || document.body.clientWidth
+    );
+    if (currentDocumentWidth <= 768 && currentDocumentWidth > 375) {
+      setCurrentDotDiameter(3);
+    }
+    if (currentDocumentWidth <= 375) {
+      setCurrentDotDiameter(2);
+    }
+    if (currentDocumentWidth > 768) {
+      setCurrentDotDiameter(4);
+    }
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -70,19 +91,26 @@ const Diagnostic = () => {
       if (isDotsVisible) {
         contextRef.current.fillStyle = "red";
         contextRef.current.beginPath();
-        contextRef.current.arc(dot.x, dot.y, 4, 0, 2 * Math.PI);
+        contextRef.current.arc(
+          dot.x,
+          dot.y,
+          currentDotDiameter,
+          0,
+          2 * Math.PI
+        );
         contextRef.current.fill();
       }
 
-      //Показать линии
+      // //Показать линии
       if (index > 0 && isLinesVisible) {
-        if (index % 2 !== 0) {
-          //Для того , чтобы линия была только между двумя точками
-          contextRef.current.moveTo(dots[index - 1].x, dots[index - 1].y);
-          contextRef.current.lineTo(dot.x, dot.y);
-        }
-        contextRef.current.strokeStyle = "red";
+        //   if (index % 2 !== 0) {
+        //     //Для того , чтобы линия была только между двумя точками
+        //     // contextRef.current.moveTo(dots[index - 1].x, dots[index - 1].y);
+        //     // contextRef.current.lineTo(dot.x, dot.y);
+        drawLineBetweenThreePoints();
       }
+
+      // }
     });
   }, [dots, isDotsVisible, isLinesVisible]);
 
@@ -149,17 +177,31 @@ const Diagnostic = () => {
   //Разница между нашими мм и теми что на картинке
   const [difference, setDifference] = useState(0);
 
-  function drawLineBetweenThreePoints(dot1, dot2, dot3) {
-    const array = [];
-    if (dot1 && dot2 && dot3) {
-      array.push(dot1, dot2, dot3);
-      contextRef.current.moveTo(dot1.x, dot1.y);
-      contextRef.current.lineTo(dot2.x, dot2.y);
-      contextRef.current.lineTo(dot3.x, dot3.y);
-      contextRef.current.stroke();
-      console.log(dot1);
-      setDrawLineMode(true);
+  const [lineCords, setLineCords] = useState([]);
+
+  //Все работает, только код длинный.Каждый if внутри первого if  - это  новая линия м/у точками
+
+  function drawLineBetweenThreePoints() {
+    contextRef.current.strokeStyle = "red";
+
+    if (lineCords.length) {
+      if (lineCords.flat().some(item => item.dotName === "B")) {
+        //обрещание к первому массиву [[0],[]]
+        contextRef.current.moveTo(lineCords[0][0].x, lineCords[0][0].y);
+        contextRef.current.lineTo(lineCords[0][1].x, lineCords[0][1].y);
+        contextRef.current.lineTo(lineCords[0][2].x, lineCords[0][2].y);
+        contextRef.current.stroke();
+      }
+      if (lineCords.flat().some(item => item.dotName === "is")) {
+        //обрещание к второму массиву [[],[1],....]
+        contextRef.current.moveTo(lineCords[1][0].x, lineCords[1][0].y);
+        contextRef.current.lineTo(lineCords[1][1].x, lineCords[1][1].y);
+        contextRef.current.lineTo(lineCords[1][2].x, lineCords[1][2].y);
+        contextRef.current.stroke();
+      }
+      //при необходимости добавить  еще линий => lineCords[индекс массива][индекс объекта]
     }
+    // console.log(lineCords); => [[{S},{N},{B}],[{S},{N},{is}]]
   }
 
   useEffect(() => {
@@ -231,10 +273,11 @@ const Diagnostic = () => {
         },
       ]);
       console.log(angle, "SNB");
-      if (dots1 && dots2 && dots3) {
-        drawLineBetweenThreePoints(dots1, dots2, dots3);
-        return;
-      }
+
+      //новый массив для пуша в lineCords
+      let arr = [];
+      arr.push(dots1, dots2, dots3);
+      setLineCords([arr]);
     }
     const indexPg = DOTS_INFO.findIndex(item => item.name === "Pg") + 1;
     if (dots.some(item => item.dotName === "Pg") && dots.length <= indexPg) {
@@ -243,21 +286,27 @@ const Diagnostic = () => {
       const B = dots.find(obj => obj.dotName === "B");
       const Pg = dots.find(obj => obj.dotName === "Pg");
       const angle = calculateAngleBetweenThreePoints(S, N, Pg, difference);
-      const angle2 = calculateDistanceBetweenLineAndDot(N, B, Pg, distances[0].value);
+      const angle2 = calculateDistanceBetweenLineAndDot(
+        N,
+        B,
+        Pg,
+        distances[0].value
+      );
       const Go = dots.find(obj => obj.dotName === "Go");
       const Me = dots.find(obj => obj.dotName === "Me");
       const Gn = dots.find(obj => obj.dotName === "Gn");
       const PgGn = calculateDistances(Pg, Gn, difference);
       const GnMe = calculateDistances(Gn, Me, difference);
       const MeGo = calculateDistances(Me, Go, difference);
-      const PgGo = PgGn + GnMe + MeGo
+      const PgGo = PgGn + GnMe + MeGo;
       setDistances(prev => [
         ...prev,
         {
           [`value`]: angle,
           ["key"]: "deg",
           ["a-b"]: `SNPg`,
-        },{
+        },
+        {
           [`value`]: PgGo,
           ["key"]: "mm",
           ["a-b"]: `Pg’-Go`,
@@ -275,6 +324,12 @@ const Diagnostic = () => {
       const dots4 = dots.find(obj => obj.dotName === "ias");
       const angle = calculateAngleBetweenFourPoints(dots1, dots2, dots3, dots4);
       const value = calculateDistances(dots1, dots2, difference);
+
+      //новый массив для пуша в lineCords
+      let arr = [];
+      arr.push(dots1, dots2, dots3);
+      setLineCords(prev => [...prev, arr]);
+
       setDistances(prev => [
         ...prev,
         {
@@ -299,7 +354,12 @@ const Diagnostic = () => {
       const Sna = dots.find(obj => obj.dotName === "Sna");
       const dots5 = dots.find(obj => obj.dotName === "A");
       const angle = calculateAngleBetweenFourPoints(is, ias, Snp, Sna);
-      const value = calculateAngleToTheIntersection(Sna, Snp, dots5, difference);
+      const value = calculateAngleToTheIntersection(
+        Sna,
+        Snp,
+        dots5,
+        difference
+      );
       const value2 = calculatePerpendicular(Snp, Sna, ias, is, difference);
       setDistances(prev => [
         ...prev,
@@ -312,7 +372,8 @@ const Diagnostic = () => {
           [`value`]: value,
           ["key"]: "mm",
           ["a-b"]: `A1-SNP`,
-        },{
+        },
+        {
           [`value`]: value2,
           ["key"]: "mm",
           ["a-b"]: `U1-NL`,
@@ -338,7 +399,6 @@ const Diagnostic = () => {
         },
       ]);
       console.log(angle, "L1-ML (Go-Me)");
-
     }
     const indexIai = DOTS_INFO.findIndex(item => item.name === "iai") + 1;
     if (dots.some(item => item.dotName === "iai") && dots.length <= indexIai) {
@@ -445,7 +505,7 @@ const Diagnostic = () => {
     if (dots.some(item => item.dotName === "Co") && dots.length <= indexCo) {
       const Co = dots.find(obj => obj.dotName === "Co");
       const Go = dots.find(obj => obj.dotName === "Go");
-      const value = calculateDistances(Co, Go, difference)
+      const value = calculateDistances(Co, Go, difference);
       setDistances(prev => [
         ...prev,
         {
@@ -462,8 +522,8 @@ const Diagnostic = () => {
     const combinedArray = [];
 
     //dotsMM меняю уже на правельный массив  combinedArray , теперь сдесь рассчет дистанции в mm
-    console.log(distances, "DISTANCE");
-    console.log(dots, "DOTS");
+    // console.log(distances, "DISTANCE");
+    // console.log(dots, "DOTS");
 
     setDotsMM(combinedArray);
     //имитация отправки на бэк
@@ -650,7 +710,7 @@ const Diagnostic = () => {
                     transform: `rotate(${rotate}deg)  `,
                   }}
                 />
-                {dots &&
+                {isDotsVisible &&
                   dots?.map((item, index) => (
                     <h1
                       style={{
