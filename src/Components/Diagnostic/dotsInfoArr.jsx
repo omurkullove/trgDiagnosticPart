@@ -1,99 +1,102 @@
 const img = "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1"
 export const DOTS_INFO = [
     {
-        name: "firstDot", img, id: 1
+        name: "firstDot", img,
     },
     {
-        name: "secondDot", img, id: 2
+        name: "secondDot", img,
     },
     {
-        name: "S", img, id: 3
+        name: "S", img,
     },
     {
-        name: "Se", img, id: 4
+        name: "Se", img,
     },
     {
-        name: "N", img, id: 5
+        name: "N", img,
     },
     {
-        name: "A", img, id: 6
+        name: "A", img,
     },
     {
-        name: "B", img, id: 7
+        name: "B", img,
     },
     {
-        name: "is", img, id: 8
+        name: "is", img,
     },
     {
-        name: "ias", img, id: 9
+        name: "ias", img,
     },
     {
-        name: "ii", img, id: 10
+        name: "ii", img,
     },
     {
-        name: "iai", img, id: 11
+        name: "iai", img,
     },
     {
-        name: "U6", img, id: 12
+        name: "U6", img,
     },
     {
-        name: "L6", img, id: 13
+        name: "L6", img,
     },
     {
-        name: "Pt", img, id: 14
+        name: "Pt", img,
     },
     {
-        name: "Po (Pr)", img, id: 15
+        name: "Po (Pr)", img,
     },
     {
-        name: "Or", img, id: 16
+        name: "Or", img,
     },
     {
-        name: "Sna", img, id: 17
+        name: "Sna", img,
     },
     {
-        name: "Snp", img, id: 18
+        name: "Snp", img,
     },
     {
-        name: "Go", img, id: 19
+        name: "Go", img,
     },
     {
-        name: "Me", img, id: 20
+        name: "Gn", img,
     },
     {
-        name: "Ba", img, id: 21
+        name: "Me", img,
     },
     {
-        name: "Ar", img, id: 22
+        name: "Ba", img,
     },
     {
-        name: "Pg", img, id: 23
+        name: "Ar", img,
     },
     {
-        name: "Co", img, id: 24
+        name: "Pg", img,
     },
     {
-        name: "gl", img, id: 25
+        name: "Co", img,
     },
     {
-        name: "sn", img, id: 26
+        name: "gl", img,
     },
     {
-        name: "pg=pog", img, id: 27
+        name: "sn", img,
     },
     {
-        name: "st", img, id: 28
+        name: "pg=pog", img,
     },
     {
-        name: "me", img, id: 29
+        name: "st", img,
     },
     {
-        name: "col=pn", img, id: 30
+        name: "me", img,
     },
     {
-        name: "UL", img, id: 31
+        name: "col=pn", img,
     },
     {
-        name: "LL", img, id: 32
+        name: "UL", img,
+    },
+    {
+        name: "LL", img,
     },
 ];

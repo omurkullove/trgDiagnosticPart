@@ -30,7 +30,7 @@ import {
   calculateAngleBetweenThreePoints,
   calculateAngleToTheIntersection,
   calculateDistanceBetweenLineAndDot,
-  calculateDistances,
+  calculateDistances, calculatePerpendicular,
 } from "./calculateFunctions/calculateFunctions";
 
 const Diagnostic = () => {
@@ -238,24 +238,34 @@ const Diagnostic = () => {
     }
     const indexPg = DOTS_INFO.findIndex(item => item.name === "Pg") + 1;
     if (dots.some(item => item.dotName === "Pg") && dots.length <= indexPg) {
-      const dots1 = dots.find(obj => obj.dotName === "S");
-      const dots2 = dots.find(obj => obj.dotName === "N");
-      const dots3 = dots.find(obj => obj.dotName === "Pg");
-      const angle = calculateAngleBetweenThreePoints(
-        dots1,
-        dots2,
-        dots3,
-        difference
-      );
+      const S = dots.find(obj => obj.dotName === "S");
+      const N = dots.find(obj => obj.dotName === "N");
+      const B = dots.find(obj => obj.dotName === "B");
+      const Pg = dots.find(obj => obj.dotName === "Pg");
+      const angle = calculateAngleBetweenThreePoints(S, N, Pg, difference);
+      const angle2 = calculateDistanceBetweenLineAndDot(N, B, Pg, distances[0].value);
+      const Go = dots.find(obj => obj.dotName === "Go");
+      const Me = dots.find(obj => obj.dotName === "Me");
+      const Gn = dots.find(obj => obj.dotName === "Gn");
+      const PgGn = calculateDistances(Pg, Gn, difference);
+      const GnMe = calculateDistances(Gn, Me, difference);
+      const MeGo = calculateDistances(Me, Go, difference);
+      const PgGo = PgGn + GnMe + MeGo
       setDistances(prev => [
         ...prev,
         {
           [`value`]: angle,
           ["key"]: "deg",
           ["a-b"]: `SNPg`,
+        },{
+          [`value`]: PgGo,
+          ["key"]: "mm",
+          ["a-b"]: `Pg’-Go`,
         },
       ]);
       console.log(angle, "SNPg");
+      console.log(PgGo, "Pg’-Go");
+      console.log(angle2, "Pg-NB");
     }
     const indexIas = DOTS_INFO.findIndex(item => item.name === "ias") + 1;
     if (dots.some(item => item.dotName === "ias") && dots.length <= indexIas) {
@@ -283,18 +293,14 @@ const Diagnostic = () => {
     }
     const indexSnp = DOTS_INFO.findIndex(item => item.name === "Snp") + 1;
     if (dots.some(item => item.dotName === "Snp") && dots.length <= indexSnp) {
-      const dots1 = dots.find(obj => obj.dotName === "is");
-      const dots2 = dots.find(obj => obj.dotName === "ias");
-      const dots3 = dots.find(obj => obj.dotName === "Snp");
-      const dots4 = dots.find(obj => obj.dotName === "Sna");
+      const is = dots.find(obj => obj.dotName === "is");
+      const ias = dots.find(obj => obj.dotName === "ias");
+      const Snp = dots.find(obj => obj.dotName === "Snp");
+      const Sna = dots.find(obj => obj.dotName === "Sna");
       const dots5 = dots.find(obj => obj.dotName === "A");
-      const angle = calculateAngleBetweenFourPoints(dots1, dots2, dots3, dots4);
-      const value = calculateAngleToTheIntersection(
-        dots4,
-        dots3,
-        dots5,
-        difference
-      );
+      const angle = calculateAngleBetweenFourPoints(is, ias, Snp, Sna);
+      const value = calculateAngleToTheIntersection(Sna, Snp, dots5, difference);
+      const value2 = calculatePerpendicular(Snp, Sna, ias, is, difference);
       setDistances(prev => [
         ...prev,
         {
@@ -306,9 +312,14 @@ const Diagnostic = () => {
           [`value`]: value,
           ["key"]: "mm",
           ["a-b"]: `A1-SNP`,
+        },{
+          [`value`]: value2,
+          ["key"]: "mm",
+          ["a-b"]: `U1-NL`,
         },
       ]);
       console.log(angle, "U1-NL (SNA-SNP)");
+      console.log(value2, "U1-NL");
       console.log(value, "A1-SNP");
     }
     const indexMe = DOTS_INFO.findIndex(item => item.name === "Me") + 1;
@@ -316,10 +327,8 @@ const Diagnostic = () => {
       const dots1 = dots.find(obj => obj.dotName === "ias");
       const dots2 = dots.find(obj => obj.dotName === "ii");
       const dots3 = dots.find(obj => obj.dotName === "Go");
-      const dots4 = dots.find(obj => obj.dotName === "Me");
-      const dots5 = dots.find(obj => obj.dotName === "Pg");
-      const dots6 = dots.find(obj => obj.dotName === "Me");
-      const angle = calculateAngleBetweenFourPoints(dots1, dots2, dots4, dots3);
+      const Me = dots.find(obj => obj.dotName === "Me");
+      const angle = calculateAngleBetweenFourPoints(dots1, dots2, Me, dots3);
       setDistances(prev => [
         ...prev,
         {
@@ -329,6 +338,7 @@ const Diagnostic = () => {
         },
       ]);
       console.log(angle, "L1-ML (Go-Me)");
+
     }
     const indexIai = DOTS_INFO.findIndex(item => item.name === "iai") + 1;
     if (dots.some(item => item.dotName === "iai") && dots.length <= indexIai) {
@@ -429,8 +439,22 @@ const Diagnostic = () => {
           ["a-b"]: `N/S/Ar`,
         },
       ]);
-
       console.log(angle, "N/S/Ar");
+    }
+    const indexCo = DOTS_INFO.findIndex(item => item.name === "Co") + 1;
+    if (dots.some(item => item.dotName === "Co") && dots.length <= indexCo) {
+      const Co = dots.find(obj => obj.dotName === "Co");
+      const Go = dots.find(obj => obj.dotName === "Go");
+      const value = calculateDistances(Co, Go, difference)
+      setDistances(prev => [
+        ...prev,
+        {
+          [`value`]: value,
+          ["key"]: "mm",
+          ["a-b"]: `Co-Go`,
+        },
+      ]);
+      console.log(value, "Co-Go");
     }
   }, [dots]);
 

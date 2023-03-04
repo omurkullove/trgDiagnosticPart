@@ -41,3 +41,29 @@ export function calculateAngleToTheIntersection(dot1, dot2, dot3, difference){
   const distWithDifference = distance + ((distance * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
   return distWithDifference
 }
+
+export function calculatePerpendicular(dot1, dot2, dot3, dot4, difference) {
+
+  const snp = dot1
+  const sna = dot2
+  const ias = dot3
+  const is = dot4
+
+  // const ias = {x: 702.5, y: 318, dotsId: 9, dotName: 'ias'}
+  // const is = {x: 747.5, y: 408, dotsId: 8, dotName: 'is'}
+  // const sna = {x: 740.5, y: 323, dotsId: 17, dotName: 'Sna'}
+  // const snp = {x: 567.5, y: 358, dotsId: 18,}
+
+  const scale = 100 / difference;
+
+  let a = { x: ias.x - is.x, y: ias.y - is.y };
+  let b = { x: snp.x - sna.x, y: snp.y - sna.y };
+
+  let proj_length_px = Math.abs(a.x * b.y - a.y * b.x) / Math.sqrt(b.x ** 2 + b.y ** 2) / 3.8;
+
+  const distance = proj_length_px / scale
+
+
+  //let distWithDifference = proj_length_px * (Math.abs(difference) / 100) ** (difference > 0 ? 1 : -1) ;
+  return proj_length_px;
+}
