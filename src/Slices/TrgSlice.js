@@ -14,7 +14,7 @@ export const TrgSlice = createSlice({
     },
     setAddToLs: (state, action) => {
       state.dotsMM = action.payload;
-      localStorage.setItem("dotsMM", JSON.stringify(state.dotsMM));
+
     },
   },
 });

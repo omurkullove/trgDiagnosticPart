@@ -1,0 +1,104 @@
+.breadcrumb {
+  width: 100%;
+  margin: 42px 42px;
+}
+
+.results{
+
+}
+
+.headerBlock{
+  margin-left: 80px;
+
+  h1{
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 75px;
+    text-transform: uppercase;
+    color: #0093D3;
+  }
+}
+
+.dFlexGP20px{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .back{
+    margin-right: 10px;
+  }
+
+  .headerBlockItem{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    cursor: pointer;
+    color: #808080;
+  }
+}
+
+.patientInfo{
+  background: #F9F9F9;
+  border-radius: 30px 30px 0px 0px;
+  padding: 34px 0 20px 95px;
+  width: 533px;
+
+  div{
+    margin-bottom: 5px;
+  }
+}
+
+.text{
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #808080;
+
+}
+.subText{
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #808080;
+
+}
+
+.table{
+  background: #F9F9F9;
+  border-radius: 0px 30px 0px 0px;
+  padding: 35px 0 0 0;
+  margin-bottom: 50px;
+
+  .item{
+    display: flex;
+    min-height: 100px;
+    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-left: 95px;
+  }
+
+  .name{
+    width: 300px;
+  }
+
+  .value{
+    width: 40%;
+  }
+}
+
+.dFlex{
+  display: flex;
+  padding-left: 95px;
+  padding-bottom: 10px;
+}

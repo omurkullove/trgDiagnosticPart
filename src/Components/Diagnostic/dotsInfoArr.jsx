@@ -3,7 +3,7 @@ const img =
 export const DOTS_INFO = [
   {
     name: "firstDot",
-    img: "",
+    img,
   },
   {
     name: "secondDot",
