@@ -32,7 +32,7 @@ import {
     calculateAngleToTheIntersection,
     calculateDistanceBetweenLineAndDot,
     calculateDistances,
-    calculatePerpendicular,
+    calculatePerpendicular, findDotOnLineAndCalculateDistance,
 } from "./calculateFunctions/calculateFunctions";
 import {useNavigate} from "react-router-dom";
 
@@ -206,12 +206,11 @@ const Diagnostic = () => {
         // тут проводится проверка на то есть ли обьекты в массиве дистанций
         if (
             distances.some(dis => typeof dis === "object" && dis !== null) &&
-            distances[0].value !== 30
+            distances[0].value !== 10
         ) {
             //берется первый обьект, он должен быть первыми точками которые служал для определение нашим мм и тех что на картинки
             //значени 30 это значение которое должен выбрать пользователь на линейке для праильного понимая системой картинки
-            const newDifference =
-                ((30 - distances[0].value) / distances[0].value) * 100;
+            const newDifference = ((10 - distances[0].value) / distances[0].value) * 100;
             //все преобразовал в проценты, это проценты разницы между картинкой и нашими мм для корректного отображения на всех разрешениях экрана
             setDifference(newDifference);
         }
@@ -361,8 +360,8 @@ const Diagnostic = () => {
             const S = dots.find(obj => obj.dotName === "S");
             const angle = calculateAngleBetweenFourPoints(is, ias, Snp, Sna);
             const NLNSL = calculateAngleBetweenFourNotConcernPoint(N, S, Sna, Snp);
-            const value = calculateAngleToTheIntersection(Sna, Snp, A, difference);
-            const value2 = calculatePerpendicular(Snp, Sna, ias, is, difference);
+            const A1Snp = findDotOnLineAndCalculateDistance(Sna, Snp, is, ias, difference);
+            const U1Nl = calculatePerpendicular(Snp, Sna, ias, is, difference);
             const NSna = calculateDistances(N, Sna, difference);
             const SnpS = calculateDistances(S, Snp, difference);
             setDistances(prev => [
@@ -373,12 +372,12 @@ const Diagnostic = () => {
                     ["name"]: `U1-NL (SNA-SNP)`,
                 },
                 {
-                    [`value`]: value,
+                    [`value`]: A1Snp,
                     ["key"]: "mm",
                     ["name"]: `A1-SNP`,
                 },
                 {
-                    [`value`]: value2,
+                    [`value`]: U1Nl,
                     ["key"]: "mm",
                     ["name"]: `U1-NL`,
                 }, {
@@ -396,8 +395,8 @@ const Diagnostic = () => {
                 },
             ]);
             console.log(angle, "U1-NL (SNA-SNP)");
-            console.log(value2, "U1-NL");
-            console.log(value, "A1-SNP");
+            console.log(U1Nl, "U1-NL");
+            console.log(A1Snp, "A1-SNP");
             console.log(NSna, "N - Sna");
             console.log(SnpS, "Snp - S");
             console.log(NLNSL, "NL/NSL");
@@ -418,6 +417,7 @@ const Diagnostic = () => {
             const NGn = calculateDistances(N, Gn, difference);
             const SnaGn = calculateDistances(Sna, Gn, difference);
             const MLNSL = calculateAngleBetweenFourNotConcernPoint(Me, Go, N, S);
+            const NlMl = calculateAngleBetweenFourNotConcernPoint(Me, Go, Sna, Snp);
             setDistances(prev => [
                 ...prev,
                 {
@@ -440,6 +440,10 @@ const Diagnostic = () => {
                     [`value`]: MLNSL,
                     ["key"]: "deg",
                     ["name"]: `ML/NSL`,
+                },{
+                    [`value`]: NlMl,
+                    ["key"]: "deg",
+                    ["name"]: `NL/ML`,
                 },
             ]);
             console.log(angle, "L1-ML (Go-Me)");
@@ -447,6 +451,7 @@ const Diagnostic = () => {
             console.log(NGn, "N - Gn");
             console.log(SnaGn, "Sna-Gn");
             console.log(MLNSL, "ML/NSL");
+            console.log(NlMl, "NL/ML");
         }
         const indexIai = DOTS_INFO.findIndex(item => item.name === "iai") + 1;
         if (dots.some(item => item.dotName === "iai") && dots.length <= indexIai) {
@@ -474,7 +479,7 @@ const Diagnostic = () => {
                 N,
                 A,
                 is,
-                distances[0].value
+                difference
             );
             setDistances(prev => [
                 ...prev,

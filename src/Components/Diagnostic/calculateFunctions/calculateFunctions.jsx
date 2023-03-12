@@ -56,13 +56,10 @@ export function calculateAngleBetweenFourNotConcernPoint(dot1, dot2, dot3, dot4)
     return angleInDegrees.toFixed(2);
 }
 
-export function calculateDistanceBetweenLineAndDot(dot1, dot2, dot3, size) {
-    let d =
-        Math.abs(
-            (dot2.x - dot1.x) * (dot1.y - dot3.y) -
-            (dot1.x - dot3.x) * (dot2.y - dot1.y)
-        ) / Math.sqrt(Math.pow(dot2.x - dot1.x, 2) + Math.pow(dot2.y - dot1.y, 2));
-    return d.toFixed(2);
+export function calculateDistanceBetweenLineAndDot(dot1, dot2, dot3, difference) {
+    let d = Math.abs((2 * dot2.x - 2 * dot1.x) * (dot1.y - dot3.y) - (dot1.x - dot3.x) * (2 * dot2.y - 2 * dot1.y)) / (Math.sqrt(Math.pow(2 * (dot2.x - dot1.x), 2) + Math.pow(2 * (dot2.y - dot1.y), 2))) / 3.8;
+    let distWithDifference = d + ((d * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
+    return distWithDifference.toFixed(2);
 }
 
 export function calculateAngleToTheIntersection(dot1, dot2, dot3, difference) {
@@ -81,18 +78,34 @@ export function calculateAngleToTheIntersection(dot1, dot2, dot3, difference) {
 
 export function calculatePerpendicular(dot1, dot2, dot3, dot4, difference) {
     //нерабочая формула
+    const snp = dot1;
+    const sna = dot2;
+    const ias = dot3;
+    const is = dot4;
+
+    const d = Math.abs((snp.y - sna.y) * is.x - (snp.x - sna.x) * is.y + snp.x * sna.y - snp.y * sna.x) / Math.sqrt((snp.y - sna.y) ** 2 + (snp.x - sna.x) ** 2) / 3.8;
+    const d_line = Math.sqrt((snp.x - sna.x) ** 2 + (snp.y - sna.y) ** 2) / 3.8;
+    const sin_alpha = d / d_line;
+    const u1_nl = d  * sin_alpha ;
+    let distWithDifference = u1_nl + ((u1_nl * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
+
+    return distWithDifference.toFixed(2);
+}
+
+export function findDotOnLineAndCalculateDistance(dot1, dot2, dot3, dot4, difference) {
     const sna = dot1;
     const snp = dot2;
     const is = dot3;
     const ias = dot4;
 
+    const v_ias_is = { x: is.x - ias.x, y: is.y - ias.y };
+    const v_sna_snp = { x: snp.x - sna.x, y: snp.y - sna.y };
+    const n_sna_snp = { x: -v_sna_snp.y, y: v_sna_snp.x, z: 0 }; // векторное произведение между v_sna_snp и (0, 0, 1)
 
-    const a = {x: is.x - ias.x, y: is.y - ias.y};
-    const b = {x: snp.x - sna.x, y: snp.y - sna.y};
+    const t = (n_sna_snp.x * (sna.x - ias.x) + n_sna_snp.y * (sna.y - ias.y)) / (n_sna_snp.x * v_ias_is.x + n_sna_snp.y * v_ias_is.y);
+    const A1 = { x: ias.x + t * v_ias_is.x, y: ias.y + t * v_ias_is.y };
 
-    const projLength = Math.abs(a.x * b.y - a.y * b.x) / Math.sqrt(b.x ** 2 + b.y ** 2) / 3.8;
-
-    let distWithDifference = projLength + ((projLength * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
-
-    return distWithDifference.toFixed(2);
+    const dist = Math.sqrt(Math.pow(A1.x - snp.x, 2) + Math.pow(A1.y - snp.y, 2)) / 3.8;
+    let distWithDifference = dist + ((dist * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
+    return distWithDifference.toFixed(2)
 }

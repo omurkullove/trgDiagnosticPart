@@ -31,7 +31,7 @@ export const DOTS_INFO = [
   },
   {
     name: "is",
-    img: "",
+    img,
   },
   {
     name: "ias",
@@ -66,7 +66,7 @@ export const DOTS_INFO = [
     img,
   },
   {
-    name: "Sn   a",
+    name: "Sna",
     img,
   },
   {
