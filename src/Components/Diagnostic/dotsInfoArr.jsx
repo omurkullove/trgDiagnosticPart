@@ -1,57 +1,91 @@
+import dotA from "./DotsAssets/A.jpg";
+import dotB from "./DotsAssets/B.jpg";
+import dotCo from "./DotsAssets/Co.jpg";
+import dotGn from "./DotsAssets/Gn.jpg";
+import dotGo from "./DotsAssets/Go.jpg";
+import dotii from "./DotsAssets/ii.jpg";
+import dotMe from "./DotsAssets/Me.jpg";
+import dotN from "./DotsAssets/N.jpg";
+import dotS from "./DotsAssets/S.jpg";
+import dotSe from "./DotsAssets/Se.jpg";
+import dotis from "./DotsAssets/is.jpg";
+import dotais from "./DotsAssets/ais.jpg";
+import dotaii from "./DotsAssets/aii.jpg";
+import dotPo from "./DotsAssets/Po.jpg";
+import dotSnp from "./DotsAssets/Snp.jpg";
+import dotSna from "./DotsAssets/Sna.png";
+import dotPg from "./DotsAssets/Pg.png";
+import dotPt from "./DotsAssets/Pt.jpg";
+import dotU6 from "./DotsAssets/U6.jpg";
+import dotOr from "./DotsAssets/Or.jpg";
+import dotL6 from "./DotsAssets/L6.jpg";
+import dotFirst from "./DotsAssets/FirstDot.jpg";
+import dotSecond from "./DotsAssets/SecondDot.jpg";
+import dotBa from "./DotsAssets/Ba.jpg";
+import dotsn from "./DotsAssets/sn.jpg";
+import dotAr from "./DotsAssets/Ar.jpg";
+import dotPog from "./DotsAssets/Pog.jpg";
+import dotUl from "./DotsAssets/UL.jpg";
+import dotLL from "./DotsAssets/LL.jpg";
+import dotme from "./DotsAssets/me_.jpg";
+import dotst from "./DotsAssets/st.jpg";
+import dotgl from "./DotsAssets/gl.jpg";
+import dotcol from "./DotsAssets/col.jpg";
+
 const img =
   "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1";
 export const DOTS_INFO = [
   {
     name: "firstDot",
-    img,
+    img: dotFirst,
   },
   {
     name: "secondDot",
-    img,
+    img: dotSecond,
   },
   {
     name: "S",
-    img: "https://diagnortho.ru/assets/template/img/S.jpg",
+    img: dotS,
   },
   {
     name: "Se",
-    img: "https://diagnortho.ru/assets/template/img/Se.jpg",
+    img: dotSe,
   },
   {
     name: "N",
-    img: "https://diagnortho.ru/assets/template/img/N.jpg",
+    img: dotN,
   },
   {
     name: "A",
-    img: "https://diagnortho.ru/assets/template/img/A.jpg",
+    img: dotA,
   },
   {
     name: "B",
-    img: "https://diagnortho.ru/assets/template/img/B.jpg",
+    img: dotB,
   },
   {
     name: "is",
-    img,
+    img: dotis,
   },
   {
-    name: "ias",
-    img,
+    name: "ais",
+    img: dotais,
   },
   {
     name: "ii",
-    img: "https://diagnortho.ru/assets/template/img/ii.jpg",
+    img: dotii,
   },
   {
-    name: "iai",
-    img,
+    name: "aii",
+    img: dotaii,
   },
   {
     name: "U6",
-    img,
+    img: dotU6,
   },
   {
     name: "L6",
-    img,
+    img: dotL6,
   },
   {
     name: "mm",
@@ -59,82 +93,82 @@ export const DOTS_INFO = [
   },
   {
     name: "Pt",
-    img,
+    img: dotPt,
   },
   {
     name: "Po (Pr)",
-    img,
+    img: dotPo,
   },
   {
     name: "Or",
-    img,
+    img: dotOr,
   },
   {
     name: "Sna",
-    img,
+    img: dotSna,
   },
   {
     name: "Snp",
-    img,
+    img: dotSnp,
   },
   {
     name: "Go",
-    img: "https://diagnortho.ru/assets/template/img/Go.jpg",
+    img: dotGo,
   },
   {
     name: "Gn",
-    img: "https://diagnortho.ru/assets/template/img/Gn.jpg",
+    img: dotGn,
   },
   {
     name: "Me",
-    img: "https://diagnortho.ru/assets/template/img/Me.jpg",
+    img: dotMe,
   },
   {
     name: "Ba",
-    img,
+    img: dotBa,
   },
   {
     name: "Ar",
-    img,
+    img: dotAr,
   },
   {
     name: "Pg",
-    img,
+    img: dotPg,
   },
   {
     name: "Co",
-    img: "https://diagnortho.ru/assets/template/img/Co.jpg",
+    img: dotCo,
   },
   {
     name: "gl",
-    img,
+    img: dotgl,
   },
   {
     name: "sn",
-    img,
+    img: dotsn,
   },
   {
     name: "pg=pog",
-    img,
+    img: dotPog,
   },
   {
     name: "st",
-    img,
+    img: dotst,
   },
   {
     name: "me",
-    img,
+    img: dotme,
   },
   {
     name: "col=pn",
-    img,
+    img: dotcol,
   },
   {
     name: "UL",
-    img,
+    img: dotUl,
   },
   {
     name: "LL",
-    img,
+    img: dotLL,
   },
 ];
