@@ -31,6 +31,7 @@ import dotme from "./DotsAssets/me_.jpg";
 import dotst from "./DotsAssets/st.jpg";
 import dotgl from "./DotsAssets/gl.jpg";
 import dotcol from "./DotsAssets/col.jpg";
+import dotmm from "./DotsAssets/mm.jpg";
 
 const img =
   "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1";
@@ -89,8 +90,9 @@ export const DOTS_INFO = [
   },
   {
     name: "mm",
-    img,
+    img: dotmm,
   },
+
   {
     name: "Pt",
     img: dotPt,
