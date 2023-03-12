@@ -32,7 +32,7 @@ import {
     calculateAngleToTheIntersection,
     calculateDistanceBetweenLineAndDot,
     calculateDistances,
-    calculatePerpendicular, findDotOnLineAndCalculateDistance,
+    calculatePerpendicular, findDotOnLineAndCalculateDistance, findDotsMlOcP, findWits, wits,
 } from "./calculateFunctions/calculateFunctions";
 import {useNavigate} from "react-router-dom";
 
@@ -358,12 +358,14 @@ const Diagnostic = () => {
             const Sna = dots.find(obj => obj.dotName === "Sna");
             const A = dots.find(obj => obj.dotName === "A");
             const S = dots.find(obj => obj.dotName === "S");
+            const U6 = dots.find(obj => obj.dotName === "U6");
             const angle = calculateAngleBetweenFourPoints(is, ias, Snp, Sna);
             const NLNSL = calculateAngleBetweenFourNotConcernPoint(N, S, Sna, Snp);
             const A1Snp = findDotOnLineAndCalculateDistance(Sna, Snp, is, ias, difference);
             const U1Nl = calculatePerpendicular(Snp, Sna, ias, is, difference);
             const NSna = calculateDistances(N, Sna, difference);
             const SnpS = calculateDistances(S, Snp, difference);
+            const U6Nl = calculatePerpendicular(Snp, Sna, U6, U6, difference);
             setDistances(prev => [
                 ...prev,
                 {
@@ -392,6 +394,10 @@ const Diagnostic = () => {
                     [`value`]: NLNSL,
                     ["key"]: "deg",
                     ["name"]: `NL/NSL`,
+                },{
+                    [`value`]: U6Nl,
+                    ["key"]: "mm",
+                    ["name"]: `NL/NSL`,
                 },
             ]);
             console.log(angle, "U1-NL (SNA-SNP)");
@@ -400,6 +406,7 @@ const Diagnostic = () => {
             console.log(NSna, "N - Sna");
             console.log(SnpS, "Snp - S");
             console.log(NLNSL, "NL/NSL");
+            console.log(U6Nl, "U6/NL");
         }
         const indexMe = DOTS_INFO.findIndex(item => item.name === "Me") + 1;
         if (dots.some(item => item.dotName === "Me") && dots.length <= indexMe) {
@@ -409,15 +416,25 @@ const Diagnostic = () => {
             const N = dots.find(obj => obj.dotName === "N");
             const S = dots.find(obj => obj.dotName === "S");
             const ii = dots.find(obj => obj.dotName === "ii");
+            const iai = dots.find(obj => obj.dotName === "iai");
             const Go = dots.find(obj => obj.dotName === "Go");
             const Me = dots.find(obj => obj.dotName === "Me");
             const Gn = dots.find(obj => obj.dotName === "Gn");
+            const L6 = dots.find(obj => obj.dotName === "L6");
+            const mm = dots.find(obj => obj.dotName === "mm");
+            const is = dots.find(obj => obj.dotName === "is");
+            const A = dots.find(obj => obj.dotName === "A");
+            const B = dots.find(obj => obj.dotName === "B");
             const angle = calculateAngleBetweenFourPoints(ias, ii, Me, Go);
             const SGo = calculateDistances(S, Go, difference);
             const NGn = calculateDistances(N, Gn, difference);
             const SnaGn = calculateDistances(Sna, Gn, difference);
             const MLNSL = calculateAngleBetweenFourNotConcernPoint(Me, Go, N, S);
+            const L1Ml = calculatePerpendicular(Go, Me, iai, ii, difference);
+            const L6Ml = calculatePerpendicular(Go, Me, L6, L6, difference);
             const NlMl = calculateAngleBetweenFourNotConcernPoint(Me, Go, Sna, Snp);
+            const MlOcP = findDotsMlOcP(is, ii, mm, Me, Go);
+            const wits = findWits(A, B, is, ii, mm, difference);
             setDistances(prev => [
                 ...prev,
                 {
@@ -444,6 +461,22 @@ const Diagnostic = () => {
                     [`value`]: NlMl,
                     ["key"]: "deg",
                     ["name"]: `NL/ML`,
+                },{
+                    [`value`]: L1Ml,
+                    ["key"]: "mm",
+                    ["name"]: `L1/ML`,
+                },{
+                    [`value`]: L6Ml,
+                    ["key"]: "mm",
+                    ["name"]: `L6/ML`,
+                },{
+                    [`value`]: MlOcP,
+                    ["key"]: "deg",
+                    ["name"]: `Ml/OcP`,
+                },{
+                    [`value`]: wits,
+                    ["key"]: "mm",
+                    ["name"]: `wits`,
                 },
             ]);
             console.log(angle, "L1-ML (Go-Me)");
@@ -452,6 +485,10 @@ const Diagnostic = () => {
             console.log(SnaGn, "Sna-Gn");
             console.log(MLNSL, "ML/NSL");
             console.log(NlMl, "NL/ML");
+            console.log(L1Ml, "L1/ML");
+            console.log(L6Ml, "L6/ML");
+            console.log(MlOcP, "L6/ML");
+            console.log(wits, "wits");
         }
         const indexIai = DOTS_INFO.findIndex(item => item.name === "iai") + 1;
         if (dots.some(item => item.dotName === "iai") && dots.length <= indexIai) {
@@ -636,6 +673,9 @@ const Diagnostic = () => {
     }, [dots]);
 const navigate = useNavigate()
     const getTotal = () => {
+
+
+
         console.log(distances)
         const newArray = distances.slice(1);
         dispatch(setAddToLs(newArray));

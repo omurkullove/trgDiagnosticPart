@@ -54,6 +54,10 @@ export const DOTS_INFO = [
     img,
   },
   {
+    name: "mm",
+    img,
+  },
+  {
     name: "Pt",
     img,
   },

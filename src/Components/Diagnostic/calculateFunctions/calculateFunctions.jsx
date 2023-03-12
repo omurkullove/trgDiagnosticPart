@@ -77,7 +77,6 @@ export function calculateAngleToTheIntersection(dot1, dot2, dot3, difference) {
 }
 
 export function calculatePerpendicular(dot1, dot2, dot3, dot4, difference) {
-    //нерабочая формула
     const snp = dot1;
     const sna = dot2;
     const ias = dot3;
@@ -108,4 +107,25 @@ export function findDotOnLineAndCalculateDistance(dot1, dot2, dot3, dot4, differ
     const dist = Math.sqrt(Math.pow(A1.x - snp.x, 2) + Math.pow(A1.y - snp.y, 2)) / 3.8;
     let distWithDifference = dist + ((dist * Math.abs(difference)) / 100) * (difference > 0 ? 1 : -1);
     return distWithDifference.toFixed(2)
+}
+
+export function findDotsMlOcP(is, ii, mm, Me, Go) {
+    const E1 = {x: is.x - ((is.x - ii.x) / 2), y: is.y - ((is.y - ii.y) / 2)}
+    const angle = calculateAngleBetweenFourNotConcernPoint(E1, mm, Me, Go)
+    return angle
+}
+
+export function findWits(A, B, is, ii, mm, difference) {
+    const E1 = {x: is.x - ((is.x - ii.x) / 2), y: is.y - ((is.y - ii.y) / 2)}
+
+    const k = (E1.y - mm.y) / (E1.x - mm.x);
+    // Рассчитываем свободный коэффициент прямой
+    const b = E1.y - k * E1.x;
+    // Рассчитываем расстояния от точек A и B до прямой через точки E1 и mm
+    const dA = Math.abs(-k * A.x + A.y - b) / Math.sqrt(k * k + 1);
+    const dB = Math.abs(-k * B.x + B.y - b) / Math.sqrt(k * k + 1);
+    const A1dot = {y: A.y + Number(dA), x: A.x}
+    const B1dot = {y: B.y - Number(dB), x: B.x}
+    const distance = calculateDistances(A1dot, B1dot, difference)
+    return distance
 }
