@@ -68,7 +68,7 @@ export const DOTS_INFO = [
     img: dotis,
   },
   {
-    name: "ais",
+    name: "ias",
     img: dotais,
   },
   {
@@ -76,7 +76,7 @@ export const DOTS_INFO = [
     img: dotii,
   },
   {
-    name: "aii",
+    name: "iai",
     img: dotaii,
   },
   {
