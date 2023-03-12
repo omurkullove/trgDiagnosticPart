@@ -118,6 +118,8 @@ const Diagnostic = () => {
     }, [dots, isDotsVisible, isLinesVisible]);
 
     function handleAddDot(event) {
+
+
         if (dots.length < DOTS_INFO.length) {
             const canvas = canvasRef.current;
             setDotsId(prev => prev + 1);
@@ -155,6 +157,7 @@ const Diagnostic = () => {
     //(Шаг назад)-удаление крайней точки
     function removeDot() {
         setDots(prevArray => prevArray.slice(0, -1));
+        setDotsId(prevState => prevState - 1)
     }
 
     const [isButton, setIsButton] = useState(false);
@@ -203,6 +206,7 @@ const Diagnostic = () => {
     }
 
     useEffect(() => {
+
         // тут проводится проверка на то есть ли обьекты в массиве дистанций
         if (
             distances.some(dis => typeof dis === "object" && dis !== null) &&
@@ -247,7 +251,6 @@ const Diagnostic = () => {
                     ["name"]: `SNA`,
                 },
             ]);
-
             console.log(angle, "SNA");
         }
         const indexB = DOTS_INFO.findIndex(item => item.name === "B") + 1;
@@ -272,7 +275,6 @@ const Diagnostic = () => {
             ]);
             console.log(angle, "SNB");
             console.log(ANB, "ANB");
-
             //новый массив для пуша в lineCords
             let arr = [];
             arr.push(S, N, B);
@@ -309,7 +311,7 @@ const Diagnostic = () => {
                     [`value`]: PgGo.toFixed(2),
                     ["key"]: "mm",
                     ["name"]: `Pg’-Go`,
-                },{
+                }, {
                     [`value`]: angle2,
                     ["key"]: "mm",
                     ["name"]: `Pg-NB`,
@@ -386,15 +388,15 @@ const Diagnostic = () => {
                     [`value`]: NSna,
                     ["key"]: "mm",
                     ["name"]: `N - Sna`,
-                },{
+                }, {
                     [`value`]: SnpS,
                     ["key"]: "mm",
                     ["name"]: `Snp - S`,
-                },{
+                }, {
                     [`value`]: NLNSL,
                     ["key"]: "deg",
                     ["name"]: `NL/NSL`,
-                },{
+                }, {
                     [`value`]: U6Nl,
                     ["key"]: "mm",
                     ["name"]: `NL/NSL`,
@@ -453,27 +455,27 @@ const Diagnostic = () => {
                     [`value`]: SnaGn,
                     ["key"]: "mm",
                     ["name"]: `Sna-Gn`,
-                },{
+                }, {
                     [`value`]: MLNSL,
                     ["key"]: "deg",
                     ["name"]: `ML/NSL`,
-                },{
+                }, {
                     [`value`]: NlMl,
                     ["key"]: "deg",
                     ["name"]: `NL/ML`,
-                },{
+                }, {
                     [`value`]: L1Ml,
                     ["key"]: "mm",
                     ["name"]: `L1/ML`,
-                },{
+                }, {
                     [`value`]: L6Ml,
                     ["key"]: "mm",
                     ["name"]: `L6/ML`,
-                },{
+                }, {
                     [`value`]: MlOcP,
                     ["key"]: "deg",
                     ["name"]: `Ml/OcP`,
-                },{
+                }, {
                     [`value`]: wits,
                     ["key"]: "mm",
                     ["name"]: `wits`,
@@ -590,7 +592,7 @@ const Diagnostic = () => {
                     [`value`]: ArGoMe,
                     ["key"]: "deg",
                     ["name"]: `Ar-Go-Me “Go”`,
-                },{
+                }, {
                     [`value`]: ArGo,
                     ["key"]: "deg",
                     ["name"]: `Ar-Go`,
@@ -644,7 +646,7 @@ const Diagnostic = () => {
                     [`value`]: snSt,
                     ["key"]: "mm",
                     ["name"]: `sn-st`,
-                },{
+                }, {
                     [`value`]: stMe,
                     ["key"]: "mm",
                     ["name"]: `st-me`,
@@ -658,7 +660,7 @@ const Diagnostic = () => {
             const UL = dots.find(obj => obj.dotName === "UL");
             const col = dots.find(obj => obj.dotName === "col=pn");
             const sn = dots.find(obj => obj.dotName === "sn");
-            const snSt = calculateAngleBetweenThreePoints(col, sn, UL,  difference);
+            const snSt = calculateAngleBetweenThreePoints(col, sn, UL, difference);
             setDistances(prev => [
                 ...prev,
                 {
@@ -670,16 +672,27 @@ const Diagnostic = () => {
             console.log(snSt, "col-sn-UL");
         }
 
+
     }, [dots]);
-const navigate = useNavigate()
+
+    useEffect(() => {
+        const indexToDelete = distances.findIndex((item, index, array) => {
+            return array.findIndex((innerItem, innerIndex) => {
+                return (innerItem.name === item.name && innerIndex < index);
+            }) !== -1;
+        });
+
+        if (indexToDelete !== -1) {
+            setDistances(prev => prev.splice(indexToDelete, 1))
+        }
+    }, [distances])
+    const navigate = useNavigate()
     const getTotal = () => {
-
-
 
         console.log(distances)
         const newArray = distances.slice(1);
         dispatch(setAddToLs(newArray));
-        navigate("/results/1")
+        //navigate("/results/1")
     };
 
     //отправка
