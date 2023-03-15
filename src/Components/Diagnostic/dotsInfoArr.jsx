@@ -37,11 +37,11 @@ const img =
   "https://api.time.com/wp-content/uploads/2019/08/better-smartphone-photos.jpg?quality=85&w=1024&h=628&crop=1";
 export const DOTS_INFO = [
   {
-    name: "firstDot",
+    name: "0mm",
     img: dotFirst,
   },
   {
-    name: "secondDot",
+    name: "10mm",
     img: dotSecond,
   },
   {
