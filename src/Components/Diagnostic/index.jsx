@@ -754,23 +754,20 @@ const Diagnostic = ({ patientInfo }) => {
     }
   }, [dots]);
 
-  // useEffect(() => {
-  //     const indexToDelete = distances.findIndex((item, index, array) => {
-  //         return (
-  //             array.findIndex((innerItem, innerIndex) => {
-  //                 return innerItem.name === item.name && innerIndex < index;
-  //             }) !== -1
-  //         );
-  //     });
-  //
-  //     if (indexToDelete !== -1) {
-  //         setDistances(prev => prev.splice(indexToDelete, 1));
-  //     }
-  // }, [distances]);
+  const [distancesFiltered, setDistancesFiltered] = useState([])
+
+  useEffect(() => {
+    const filteredArr = Object.values(distances.reduce((acc, cur) => {
+      acc[cur.name] = cur;
+      return acc;
+    }, {}));
+    setDistancesFiltered(filteredArr)
+  }, [distances]);
+
   const navigate = useNavigate();
   const getTotal = () => {
-    console.log(distances);
-    const newArray = distances.slice(1);
+    console.log(distancesFiltered);
+    const newArray = distancesFiltered.slice(1);
     dispatch(setAddToLs(newArray));
     navigate(`/results/${patientInfo.id}`);
   };
